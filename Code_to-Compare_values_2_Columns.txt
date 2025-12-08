@@ -1,0 +1,20 @@
+Sub CompareandHighlight()
+
+        Dim i, n As Integer
+        Dim valE, valI As Variant
+
+        n = Worksheets("Indices").Range("E:E").Cells.SpecialCells(xlCellTypeConstants).Count
+        Application.ScreenUpdating = False
+
+        For i = 2 To n
+        valE = Worksheets("Indices").Range("E" & i).Value
+        valI = Worksheets("Indices").Range("I" & i).Value
+
+            If valE = valI Then
+		' --- Do nothing ---	
+            Else:
+               Worksheets("Indices").Range("E" & i).Font.Color = RGB(255, 0, 0)
+
+            End If
+        Next i
+End Sub

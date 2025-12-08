@@ -1,0 +1,64 @@
+Sub Check_Value()
+'***************************************************
+' Macro Name    : Check_Value
+' Description   : Macro to check values from source sheet
+'                 available in destination sheet
+' Author        : Biju Kumar
+' Version       : 1.0
+' Modified      : 19-Dec-12
+'***************************************************
+
+    Dim srcSheet, destSheet, FindString  As String
+    Dim intRow, totRows, foundCount, notfoundCount As Integer
+    Dim myArray As Variant
+    Dim SearchVal() As Variant
+    Dim Rng As Range
+
+    ' Enter Source/ Reference worksheet name
+    srcSheet = "GSX_Suites"
+    ' Enter Final worksheet name to be compared with
+    destSheet = "GSX_TMS"
+
+    intRow = 1
+    foundCount = 0
+    notfoundCount = 0
+ 
+    ' Select Target sheet & get count of rows/values to be compared
+    Sheets(destSheet).Select
+    Do Until IsEmpty(Cells(intRow, 24))
+    intRow = intRow + 1
+    Loop
+    
+    totRows = intRow - 1
+    'MsgBox "Total values to be searched = " & totRows, vbInformation, "FYI"
+        
+      Sheets(destSheet).Select
+      Range("X1").Select
+      myArray = Range("X1:X" & totRows).Value
+      
+      'Looping structure to look at array.
+      For i = 2 To UBound(myArray)
+      FindString = myArray(i, 1)
+      With Sheets(srcSheet).Range("A:S")
+        Set Rng = .Find(What:=FindString, _
+                            After:=.Cells(.Cells.Count), _
+                            LookIn:=xlValues, _
+                            LookAt:=xlWhole, _
+                            SearchOrder:=xlByRows, _
+                            SearchDirection:=xlNext, _
+                            MatchCase:=False)
+                If Not Rng Is Nothing Then
+                    Sheets(destSheet).Select
+                    Cells(i, 25).Value = "Found"
+                    foundCount = foundCount + 1
+                Else
+                    notfoundCount = notfoundCount + 1
+                End If
+        End With
+        Sheets(destSheet).Select
+      Next
+      MsgBox "Found:" & foundCount
+      MsgBox " Not found:" & notfoundCount
+   End Sub
+
+
